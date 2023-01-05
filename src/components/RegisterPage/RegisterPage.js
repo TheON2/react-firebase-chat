@@ -1,11 +1,13 @@
-import React from "react";
+import React, {useRef} from "react";
 import {Link} from "react-router-dom";
 import {useForm} from "react-hook-form";
 
 function RegisterPage() {
 
-  const {register, watch, formState: { errors }} = useForm({ mode : "onChange"});
+  const {register, watch, formState: { errors }} = useForm();
 
+  const password = useRef();
+  password.current = watch("password");
   console.log(watch("email"))
 
   return (
@@ -16,31 +18,31 @@ function RegisterPage() {
       <form
 
       >
-        {/* register your input into the hook by invoking the "register" function */}
         <label>Email</label>
-        <input name="email" type="email" {...register("email")}
+        <input name="email" type="email" {...register("email",{ required: true , pattern: /^\S+@\S+$/i})}
 
         />
         {errors.email && <p>This field is required</p>}
-
-        {/* include validation with required or other standard HTML validation rules */}
         <label>Name</label>
-        <input name="name"
+        <input name="name" {...register("name",{required:true , maxLength:10})}
 
         />
-        {/* errors will return when field validation fails  */}
+        {errors.name && errors.name.type ==="required" && <p>This field is required</p>}
+        {errors.name && errors.name.type ==="maxLength" && <p>Your input exceed maximum maxLength</p>}
         <label>Password</label>
-        <input name="password" type="password"
+        <input name="password" type="password" {...register("password",{required:true , minLength:6})}
 
         />
-        {/* errors will return when field validation fails  */}
+        {errors.password && errors.password.type ==="required" && <p>This field is required</p>}
+        {errors.password && errors.password.type ==="minLength" && <p>Password must have at 6 words</p>}
         <label>Password Confirm</label>
         <input name="password_confirm" type="password"
-
+               {...register("password_confirm",{required: true , validate: (value)=> value === password.current})}
         />
-        {/* errors will return when field validation fails  */}
-
-
+        {errors.password_confirm && errors.password_confirm.type === "required" &&
+        <p>This password confirm field is required</p>}
+        {errors.password_confirm && errors.password_confirm.type === "validate" &&
+        <p>This password do not match</p>}
         <input type="submit"/>
         <Link style={{color: 'gray', textDecoration: 'none'}} to="/login">
           이미 아이디가 있다면 ...
