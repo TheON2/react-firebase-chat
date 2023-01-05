@@ -1,9 +1,14 @@
 import React from "react";
 
-function RegisterPage(){
-  return(
+function RegisterPage() {
+  return (
     <div>
-      RegisterPage
+      adfasfasdf
+      <form>
+        <input defaultValue="test"/>
+        <input/>
+        <input type="submit"/>
+      </form>
     </div>
   )
 }
